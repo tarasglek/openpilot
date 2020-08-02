@@ -90,7 +90,7 @@ class CarController():
 
     # on entering standstill, send standstill request
     if CS.out.standstill and not self.last_standstill:
-      self.standstill_req = True
+      self.standstill_req = False
     if CS.pcm_acc_status != 8:
       # pcm entered standstill or it's disabled
       self.standstill_req = False
