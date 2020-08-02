@@ -153,25 +153,7 @@ class DriverStatus():
       self.active_monitoring_mode = False
 
   def _is_driver_distracted(self, pose, blink):
-    if not self.pose_calibrated:
-      pitch_error = pose.pitch - _PITCH_NATURAL_OFFSET
-      yaw_error = pose.yaw - _YAW_NATURAL_OFFSET
-    else:
-      pitch_error = pose.pitch - self.pose.pitch_offseter.filtered_stat.mean()
-      yaw_error = pose.yaw - self.pose.yaw_offseter.filtered_stat.mean()
-
-    # positive pitch allowance
-    if pitch_error > 0.:
-      pitch_error = max(pitch_error - _PITCH_POS_ALLOWANCE, 0.)
-    pitch_error *= _PITCH_WEIGHT
-    pose_metric = sqrt(yaw_error**2 + pitch_error**2)
-
-    if pose_metric > _METRIC_THRESHOLD*pose.cfactor:
-      return DistractedType.BAD_POSE
-    elif (blink.left_blink + blink.right_blink)*0.5 > _BLINK_THRESHOLD*blink.cfactor:
-      return DistractedType.BAD_BLINK
-    else:
-      return DistractedType.NOT_DISTRACTED
+    return DistractedType.NOT_DISTRACTED
 
   def set_policy(self, model_data):
     ep = min(model_data.meta.engagedProb, 0.8) / 0.8
